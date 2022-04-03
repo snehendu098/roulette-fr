@@ -1,6 +1,6 @@
-import { IoIosArrowDropdownCircle } from "react-icons/io";
 import { Listbox } from "@headlessui/react";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const people = [
   { id: 1, name: "1 : 1.25", returnTimes: 1.25 },
@@ -12,10 +12,20 @@ const people = [
 const RatioFix = () => {
   const [selectedPerson, setSelectedPerson] = useState(people[0]);
 
-  console.log(selectedPerson);
+  const state = useSelector((state) => state.state);
+  console.log(state);
+  const dispatch = useDispatch();
+
+  const handleClick = () => {
+    dispatch({ type: "INCREMENT" });
+    dispatch({ type: "SET_RATIO", payload: selectedPerson.returnTimes });
+  };
 
   return (
     <div className="min-w-[70vw] mt-5 p-3 rounded">
+      <p className="text-red-600 font-mono text-center mb-5">
+        Select your ratio
+      </p>
       <Listbox value={selectedPerson} onChange={setSelectedPerson}>
         <div className="bg-white rounded-md">
           <Listbox.Button className={`w-full p-3`}>
@@ -30,7 +40,10 @@ const RatioFix = () => {
           ))}
         </Listbox.Options>
       </Listbox>
-      <div className="mt-2 bg-slate-900 text-white text-center p-3 rounded-xl">
+      <div
+        onClick={handleClick}
+        className="mt-2 bg-slate-900 text-white text-center p-3 rounded-xl"
+      >
         Proceed
       </div>
     </div>

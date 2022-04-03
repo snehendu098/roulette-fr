@@ -3,6 +3,9 @@ import {
   SystemProgram,
   Transaction,
   LAMPORTS_PER_SOL,
+  Connection,
+  clusterApiUrl,
+  PublicKey,
 } from "@solana/web3.js";
 
 export const treasureSecret = [
@@ -16,7 +19,8 @@ export const transferSOL = async (
   value,
   publicKey,
   sendTransaction,
-  connection
+  connection,
+  treasureSecret
 ) => {
   const treasureWallet = Keypair.fromSecretKey(Uint8Array.from(treasureSecret));
 
@@ -34,3 +38,20 @@ export const transferSOL = async (
 
   return signature;
 };
+
+export const airdropSOL = async (transferAmount) => {
+  const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+
+  const treasureWallet = Keypair.fromSecretKey(Uint8Array.from(treasureSecret));
+  const airDropRequest = await connection.requestAirdrop(
+    new PublicKey(treasureWallet.publicKey.toString()),
+    transferAmount * LAMPORTS_PER_SOL
+  );
+
+  await connection.confirmTransaction(airDropRequest);
+  return airDropRequest;
+};
+
+export function randomNumber(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}

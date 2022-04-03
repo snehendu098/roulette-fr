@@ -3,8 +3,8 @@ const Counter = (state = 0, action) => {
     case "INCREMENT":
       return state + 1;
 
-    case "DECREMENT":
-      return state - 1;
+    case "REVERT":
+      return (state = 0);
 
     default:
       return state;
